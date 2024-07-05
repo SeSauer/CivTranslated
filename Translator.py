@@ -3,10 +3,13 @@ import sys
 import translators
 from random import choice
 
+#good translators: modernMt
 
 PREAC = sys.argv[1] == "PREAC"
 if PREAC:
     _ = translators.preaccelerate_and_speedtest()
+
+SEQUENCE_OVERRIDE = ["az", "th", "tr", "en"]
 
 class Translator:
     def translate(self, input_text: str) -> str:
@@ -18,10 +21,12 @@ class BadTranslator(Translator):
     def __init__(self, translations: int, end_lang="en"):
         self.translations = translations
         self.sequence = []
-
-        for _ in range(self.translations - 1):
-            self.sequence.append(choice(list(translators.get_languages("modernMt"))))
-        self.sequence.append(end_lang)
+        if SEQUENCE_OVERRIDE:
+            self.sequence = SEQUENCE_OVERRIDE
+        else:
+            for x in range(self.translations - 1):
+                self.sequence.append(choice(list(translators.get_languages("modernMt"))))
+            self.sequence.append(end_lang)
         print(self.sequence)
 
 
@@ -47,6 +52,6 @@ class Sanitizer(Translator):
 
 
 if __name__ == '__main__':
-    #print(translators.translators_pool)
+    print(translators.get_languages("argos"))
     translator = BadTranslator(3)
-    print(translator.translate("Hallo wir geht es dir?"))
+    print(translator.translate("In the beginning, the earth was without form. And void. And then the sun shone upon the sleeping earth. Into this swirling maelstrom of fire air and water, the first stirrings of life appeared."))
