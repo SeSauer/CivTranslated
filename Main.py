@@ -4,10 +4,10 @@ from WriteFile import WriteSQL
 
 FORBIDDEN_TAGS = ["LOC_CREDITS", "LOC_EXPANSION1_CREDITS","LOC_EXPANSION2_CREDITS", "LOC_FRONTIER_CREDITS", "LOC_LEADERPASS_CREDITS"]
 
-Database = CustomDatabaseAccess("Civ6Texts/Civ6Texts.sqlite", "Expansion2")
+Database = CustomDatabaseAccess("Civ6Texts/Civ6Texts.sqlite", None)
 translator = BadTranslator(3)
 sanitizer = Sanitizer()
-file_out = WriteSQL("Output/Expansion2.sql")
+file_out = WriteSQL("Output/Complete.sql")
 
 
 i = 0

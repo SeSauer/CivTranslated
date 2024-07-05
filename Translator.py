@@ -4,12 +4,13 @@ import translators
 from random import choice
 
 #good translators: modernMt
+#good langs: ['so', 'ydd', 'ht', 'en']
 
 PREAC = sys.argv[1] == "PREAC"
 if PREAC:
     _ = translators.preaccelerate_and_speedtest()
 
-SEQUENCE_OVERRIDE = ["az", "th", "tr", "en"]
+SEQUENCE_OVERRIDE = ['so', 'ydd', 'ht', 'en']
 
 class Translator:
     def translate(self, input_text: str) -> str:
@@ -53,5 +54,7 @@ class Sanitizer(Translator):
 
 if __name__ == '__main__':
     print(translators.get_languages("argos"))
-    translator = BadTranslator(3)
+    translator = BadTranslator(6)
     print(translator.translate("In the beginning, the earth was without form. And void. And then the sun shone upon the sleeping earth. Into this swirling maelstrom of fire air and water, the first stirrings of life appeared."))
+    print(translator.translate(
+        "Barbary Corsair"))

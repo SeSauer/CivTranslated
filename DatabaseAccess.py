@@ -28,7 +28,10 @@ class CustomDatabaseAccess(BaseDatabaseAccess):
         self.filepath = Path(filepath)
         self.connection = sqlite3.connect(self.filepath)
         self.cursor = self.connection.cursor()
-        self.cursor.execute(f'SELECT Tag, en_US FROM LocalizedText WHERE DLC = "{filter}"')
+        if filter is not None:
+            self.cursor.execute(f'SELECT Tag, en_US FROM LocalizedText WHERE DLC = "{filter}"')
+        else:
+            self.cursor.execute(f'SELECT Tag, en_US FROM LocalizedText')
 
     def __iter__(self):
         return self
