@@ -7,11 +7,15 @@ from random import choice
 #good translators: modernMt
 #good langs: ['so', 'ydd', 'ht', 'en']
 
-PREAC = sys.argv[1] == "PREAC"
+if sys.argv.__len__() > 1:
+    PREAC = sys.argv[1] == "PREAC"
+else:
+    PREAC = False
 if PREAC:
     _ = translators.preaccelerate_and_speedtest()
 
-SEQUENCE_OVERRIDE = ['so', 'ydd', 'ht', 'en']
+SEQUENCE_OVERRIDE = []
+"""Use Sequence Override to force a specific sequence of Languages. If the List is empty, a random sequence will be generated"""
 
 class Translator:
     def translate(self, input_text: str) -> str:
@@ -19,8 +23,12 @@ class Translator:
 
 
 class BadTranslator(Translator):
+    """Translates input text throug multiple Languages"""
 
     def __init__(self, translations: int, end_lang="en"):
+        """Translates input text throug multiple Languages
+        :param translations: Number of total translations for each input text
+        :param end_lang: the desired language for the final output"""
         self.translations = translations
         self.sequence = []
         if SEQUENCE_OVERRIDE:
@@ -30,7 +38,6 @@ class BadTranslator(Translator):
                 self.sequence.append(choice(list(translators.get_languages("modernMt"))))
             self.sequence.append(end_lang)
         print(self.sequence)
-
 
     def translate(self, input_text: str) -> str:
         text = input_text
@@ -43,24 +50,19 @@ class BadTranslator(Translator):
 
 
 class ReverseTranslator(Translator):
+    """Translator used for testing; Inverts any input text"""
     def translate(self, input_text: str) -> str:
         return input_text[::-1]
 
 
 class Preprocessor(Translator):
+    """Should be run on any text before translation"""
     def translate(self, input_text: str) -> str:
         return re.sub("\{.*?\}", "", input_text)
 
 
-class Sanitizer(Translator):
+class Postprocessor(Translator):
+    """Should be run on any text after translation for SQL escaping"""
     def translate(self, input_text: str) -> str:
         text = input_text.replace("'", "''")
         return text
-
-
-if __name__ == '__main__':
-    print(translators.get_languages("argos"))
-    translator = Preprocessor()
-    print(translator.translate("In the beginning, the earth was without form. And void. And then the sun shone upon the sleeping earth. Into this swirling maelstrom of fire air and water, the first stirrings of life appeared."))
-    print(translator.translate(
-        "Ba{r{ba{ry Co"))

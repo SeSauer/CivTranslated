@@ -1,29 +1,27 @@
 from DatabaseAccess import CustomDatabaseAccess
-from Translator import BadTranslator, Sanitizer, ReverseTranslator, Preprocessor
+from Translator import BadTranslator, Postprocessor, Preprocessor
 from WriteFile import WriteSQL
 
 FORBIDDEN_TAGS = ["LOC_CREDITS", "LOC_EXPANSION1_CREDITS","LOC_EXPANSION2_CREDITS", "LOC_FRONTIER_CREDITS", "LOC_LEADERPASS_CREDITS"]
+"""Tags that will not be translated"""
 
-Database = CustomDatabaseAccess("Civ6Texts/Civ6Texts.sqlite", None)
-translator = BadTranslator(3)
-sanitizer = Sanitizer()
+#initialize
+database = CustomDatabaseAccess("Civ6Texts/Civ6Texts.sqlite", None)
+postproc = Postprocessor()
 preproc = Preprocessor()
-file_out = WriteSQL("Output/Complete3.sql")
+output_file = WriteSQL("Output/Translated.sql")
 
+#change this to do different translations
+translator = BadTranslator(5)
 
 i = 0
-
-for (tag, text) in Database:
+for (tag, text) in database:
     if text is None: continue
     if tag in FORBIDDEN_TAGS: continue
-    if i < 11031:
-        i += 1
-        continue
     translated = preproc.translate(text)
     translated = translator.translate(translated)
-    translated = sanitizer.translate(translated)
-    file_out.writeStatement(tag, translated)
+    translated = postproc.translate(translated)
+    output_file.writeStatement(tag, translated)
     print(i)
     i += 1
-    #if i > 100: break
-file_out.finish()
+output_file.finish()

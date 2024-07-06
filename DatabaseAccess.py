@@ -7,6 +7,7 @@ class BaseDatabaseAccess:
 
 
 class DebugDatabaseAccess(BaseDatabaseAccess):
+    """Iteratable class for reading entries from Civs Chached DebugLocalization.sqlite database (Does not include DLCs)"""
     def __init__(self, filepath: str):
         self.filepath = Path(filepath)
         self.connection = sqlite3.connect(self.filepath)
@@ -24,7 +25,12 @@ class DebugDatabaseAccess(BaseDatabaseAccess):
 
 
 class CustomDatabaseAccess(BaseDatabaseAccess):
-    def __init__(self, filepath: str, filter: str):
+    """Iteratable class for reading entries from The Complete Database provided via
+    https://forums.civfanatics.com/resources/civ6-debuglocalization-sqlite-database-with-all-expansions-and-dlcs-texts.28236/
+    (see Civ6Texts/Download.txt for Download link)
+    Contains all texts, including DLC
+    :param filter: Use to only return entries from a specific expamsion eg: 'Base' 'Expansion2' 'Babylon'"""
+    def __init__(self, filepath: str, filter: str | None):
         self.filepath = Path(filepath)
         self.connection = sqlite3.connect(self.filepath)
         self.cursor = self.connection.cursor()
