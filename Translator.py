@@ -1,4 +1,5 @@
 import sys
+import re
 
 import translators
 from random import choice
@@ -46,6 +47,11 @@ class ReverseTranslator(Translator):
         return input_text[::-1]
 
 
+class Preprocessor(Translator):
+    def translate(self, input_text: str) -> str:
+        return re.sub("\{.*?\}", "", input_text)
+
+
 class Sanitizer(Translator):
     def translate(self, input_text: str) -> str:
         text = input_text.replace("'", "''")
@@ -54,7 +60,7 @@ class Sanitizer(Translator):
 
 if __name__ == '__main__':
     print(translators.get_languages("argos"))
-    translator = BadTranslator(6)
+    translator = Preprocessor()
     print(translator.translate("In the beginning, the earth was without form. And void. And then the sun shone upon the sleeping earth. Into this swirling maelstrom of fire air and water, the first stirrings of life appeared."))
     print(translator.translate(
-        "Barbary Corsair"))
+        "Ba{r{ba{ry Co"))
